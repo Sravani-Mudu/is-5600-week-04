@@ -1,23 +1,23 @@
-const fs = require('fs').promises
-const path = require('path')
-const express = require('express')
-const api = require('./api')
-const middleware = require('./middleware')
-const bodyParser = require('body-parser')
+// app.js
 
+const express = require('express');
+const bodyParser = require('body-parser');
+const api = require('./api');
+const middleware = require('./middleware');
 
+const app = express();
 
-// Set the port
-const port = process.env.PORT || 3000
-@@ -11,6 +16,12 @@ app.use(express.static(__dirname + '/public'));
-// register the routes
-app.get('/products', listProducts)
-app.get('/', handleRoot);
-app.get('/products/:id', api.getProduct)
-app.post('/products', api.createProduct)
-app.delete('/products/:id', api.deleteProduct);
-app.put('/products/:id', api.updateProduct);
-app.use(middleware.handleError)
-app.use(middleware.notFound)
-// Boot the server
-app.listen(port, () => console.log(Server listening on port ${port}))
+// Middleware
+app.use(middleware.cors);        // Enable CORS if needed
+app.use(bodyParser.json());      // Parse JSON request bodies
+app.use(express.static(__dirname + '/public')); // Serve static files
+
+// Routes
+app.get('/', api.handleRoot);           // Root route
+app.get('/products', api.listProducts); // List products route
+
+// Start server
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
